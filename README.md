@@ -1,4 +1,4 @@
-# Mapty Project
+# 🗺️ Mapty Project
 
 A workout tracking application that allows users to log running and cycling activities on a map.
 
@@ -14,8 +14,14 @@ A workout tracking application that allows users to log running and cycling acti
 - JavaScript
 
 ## ▶️ How to Run
-1. Clone the repository
-2. Open "index.html" in browser
+1. Clone the repository  
+2. Open the project folder  
+3. Open "index.html" in your browser
+
+OR use VS Code Live Server
+
+## 📸 Preview
+<img width="1912" height="910" alt="mapty" src="https://github.com/user-attachments/assets/cb1680e2-818c-47e3-b021-f8f8d0fdb455" />
 
 ## 📌 Author
 
