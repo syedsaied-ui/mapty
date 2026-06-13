@@ -2,6 +2,10 @@
 
 A workout tracking application that allows users to log running and cycling activities on a map.
 
+## 🌐 Live Demo
+
+🔗 https://mapty-saied.vercel.app
+
 ## 🚀 Features
 - Add running and cycling workouts
 - Display workouts on map
