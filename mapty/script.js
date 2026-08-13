@@ -131,10 +131,35 @@ class App {
   }
 
   _getPosition() {
-    if (navigator.geolocation)
-      navigator.geolocation.getCurrentPosition(this._loadMap.bind(this), () =>
-        alert("Couldn't get your position"),
-      );
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      this._loadMap.bind(this),
+      this._handlePositionError.bind(this),
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 60000,
+      },
+    );
+  }
+
+  _handlePositionError(error) {
+    console.log("Geolocation error:", error);
+
+    // Fallback location: Karachi
+    // This ensures the map still loads even if location permission fails.
+    const fallbackCoords = [24.8607, 67.0011];
+
+    this._loadMap({
+      coords: {
+        latitude: fallbackCoords[0],
+        longitude: fallbackCoords[1],
+      },
+    });
   }
 
   _loadMap(position) {
@@ -143,14 +168,32 @@ class App {
 
     this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
 
-    // Handling clicks on map
+    // Make Leaflet recalculate its size after the responsive layout
+    requestAnimationFrame(() => {
+      this.#map.invalidateSize();
+    });
+
+    // Handle screen resizing
+    window.addEventListener("resize", () => {
+      this.#map.invalidateSize();
+    });
+
+    // Handle orientation changes on phones/tablets
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        this.#map.invalidateSize();
+      }, 300);
+    });
+
+    // Click map → show workout form
     this.#map.on("click", this._showForm.bind(this));
 
+    // Render saved workout markers
     this.#workouts.forEach(work => {
       this._renderWorkoutMarker(work);
     });
